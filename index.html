@@ -7,7 +7,7 @@
   <title>ihatehoes</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
   <style>
     html, body {
       margin: 0; padding: 0; height: 100%; width: 100%;
@@ -18,37 +18,40 @@
       background: #000;
       display: flex; align-items: center; justify-content: center;
       transition: background 200ms ease;
-      /* palette glitter dello stato corrente (impostata via JS) */
       --grad: linear-gradient(110deg,#cfcfcf 0%,#ffffff 18%,#ff9ce0 38%,#ffffff 52%,#bdbdbd 72%,#ffffff 100%);
       --glow: rgba(255,255,255,.45);
       --spark: #ffffff;
     }
     .word {
       position: relative;
-      font-family: 'Great Vibes', cursive;
+      display: inline-flex; align-items: center; gap: .12em;
+      font-family: 'Pacifico', cursive;
       font-weight: 400;
-      font-size: clamp(4rem, 22vw, 15rem);
-      line-height: 1;
+      font-size: clamp(3.2rem, 17vw, 12rem);
+      line-height: 1.1;
       text-align: center;
       user-select: none; -webkit-user-select: none;
+      animation: popIn 750ms cubic-bezier(.2,.85,.3,1.5) both;
+    }
+    /* solo il testo riceve il glitter, non l'emoji */
+    .glitter {
       background: var(--grad);
       background-size: 260% 100%;
       -webkit-background-clip: text; background-clip: text;
       color: transparent;
       filter: drop-shadow(0 0 10px var(--glow));
-      animation: shimmer 3s linear infinite, popIn 750ms cubic-bezier(.2,.85,.3,1.5) both;
+      animation: shimmer 3s linear infinite;
     }
+    .emoji { line-height: 1; }
     @keyframes shimmer { to { background-position: 260% 0; } }
     @keyframes popIn {
       0%   { opacity: 0; transform: scale(.4) rotate(-6deg); }
       60%  { opacity: 1; transform: scale(1.12) rotate(2deg); }
       100% { opacity: 1; transform: scale(1) rotate(0); }
     }
-    /* scintille */
     .spark {
       position: absolute; pointer-events: none;
-      color: var(--spark); font-size: .9rem;
-      opacity: 0;
+      color: var(--spark); font-size: .9rem; opacity: 0;
       animation: twinkle 1.6s ease-in-out infinite;
       text-shadow: 0 0 6px var(--spark);
     }
@@ -60,7 +63,9 @@
 </head>
 <body>
   <div id="screen">
-    <span id="word" class="word">fuck you</span>
+    <span id="word" class="word">
+      <span id="wtext" class="glitter">fuck you</span><span id="wemoji" class="emoji"></span>
+    </span>
     <span class="spark" style="top:18%;left:20%;animation-delay:0s">✦</span>
     <span class="spark" style="top:30%;left:78%;animation-delay:.3s;font-size:1.3rem">✦</span>
     <span class="spark" style="top:68%;left:30%;animation-delay:.6s;font-size:1.1rem">✦</span>
@@ -72,21 +77,19 @@
     var dark = true;
     var screen = document.getElementById('screen');
     var word = document.getElementById('word');
+    var wtext = document.getElementById('wtext');
+    var wemoji = document.getElementById('wemoji');
 
     var THEME = {
       dark: {
-        bg: '#000',
-        text: 'fuck you',
+        bg: '#000', text: 'fuck you', emoji: '',
         grad: 'linear-gradient(110deg,#cfcfcf 0%,#ffffff 18%,#ff9ce0 38%,#ffffff 52%,#bdbdbd 72%,#ffffff 100%)',
-        glow: 'rgba(255,255,255,.45)',
-        spark: '#ffffff'
+        glow: 'rgba(255,255,255,.45)', spark: '#ffffff'
       },
       light: {
-        bg: '#fff',
-        text: 'all 🤡',
+        bg: '#fff', text: 'all', emoji: '🤡',
         grad: 'linear-gradient(110deg,#b8860b 0%,#ffd700 22%,#c2185b 45%,#ffd700 68%,#b8860b 100%)',
-        glow: 'rgba(194,24,91,.35)',
-        spark: '#c2185b'
+        glow: 'rgba(194,24,91,.35)', spark: '#c2185b'
       }
     };
 
@@ -97,8 +100,8 @@
       screen.style.setProperty('--grad', t.grad);
       screen.style.setProperty('--glow', t.glow);
       screen.style.setProperty('--spark', t.spark);
-      word.textContent = t.text;
-      // riavvia l'animazione d'entrata
+      wtext.textContent = t.text;
+      wemoji.textContent = t.emoji;
       word.style.animation = 'none';
       void word.offsetWidth;
       word.style.animation = '';
