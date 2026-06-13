@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#000000">
+  <title>ihatehoes</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      width: 100%;
+      background: #000;
+      overflow: hidden;
+      cursor: none;
+    }
+    /* riempie tutta la viewport, anche dietro le notch / barre del browser mobile */
+    #screen {
+      position: fixed;
+      inset: 0;
+      background: #000;
+      transition: background 120ms ease;
+    }
+  </style>
+</head>
+<body>
+  <div id="screen"></div>
+  <script>
+    // tocco / clic: alterna nero <-> bianco
+    var dark = true;
+    var screen = document.getElementById('screen');
+    function toggle() {
+      dark = !dark;
+      var c = dark ? '#000' : '#fff';
+      screen.style.background = c;
+      document.documentElement.style.background = c;
+      document.body.style.background = c;
+    }
+    screen.addEventListener('click', toggle);
+    // su mobile evita il ritardo e i doppi eventi
+    screen.addEventListener('touchstart', function (e) { e.preventDefault(); toggle(); }, { passive: false });
+  </script>
+</body>
+</html>
